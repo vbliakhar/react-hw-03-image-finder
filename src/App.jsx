@@ -1,11 +1,24 @@
-import "./App.scss";
+import React, { Component } from "react";
+import Searchbar from "./components/Searchbar";
 
-function App() {
-  return (
-    <div className="App">
-      <h1>App</h1>
-    </div>
-  );
+import "./App.scss";
+import ImageGallery from "./components/ImageGallery/ImageGallery";
+class App extends Component {
+  state = {
+    myImage: "",
+  };
+  handleFormSubmit = (myImage) => {
+    this.setState({ myImage });
+    console.log(myImage + " handleFormSubmit App");
+  };
+  render() {
+    return (
+      <div>
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery myImage={this.state.myImage} />
+      </div>
+    );
+  }
 }
 
 export default App;
