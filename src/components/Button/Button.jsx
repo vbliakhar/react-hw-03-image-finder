@@ -1,11 +1,23 @@
 import React from "react";
 
-const Button = () => {
+const Button = (props) => {
   return (
-    <li className="ImageGalleryItem">
-      <img src="" alt="" className="ImageGalleryItem-image" />
-    </li>
+    <>
+      <button
+        type="button"
+        className="Button"
+        style={{ textAlign: "center" }}
+        onClick={props.onClick}
+      >
+        Load more
+      </button>
+    </>
   );
 };
 
 export default Button;
+
+// window.scrollTo({
+//   top: document.documentElement.scrollHeight,
+//   behavior: 'smooth',
+// });
