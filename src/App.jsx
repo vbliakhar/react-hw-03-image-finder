@@ -14,6 +14,7 @@ class App extends Component {
     loading: false,
     error: null,
     page: 1,
+    test: [],
   };
   handleFormSubmit = (myImage) => {
     this.setState({ myImage });
@@ -23,7 +24,7 @@ class App extends Component {
     const prevName = prevState.myImage;
     const nextName = this.state.myImage;
     if (prevName !== nextName) {
-      this.setState({ loading: true, images: null });
+      this.setState({ loading: true });
       this.fetchImages();
     }
   }
@@ -33,20 +34,16 @@ class App extends Component {
     )
       .then((res) => {
         if (res.ok) {
-          return res.json();
+          return res.json().then((data) => data.hits);
         }
         return Promise.reject(new Error(` No image  ${this.state.myImage}`));
       })
       .then((images) => {
-        // this.setState({
-        //   images: [...images.hits, ...this.state.images],
-        //   page: this.state.page + 1,
-        // });
-        this.setState((preState) => ({
-          images: [...images.hits],
-          page: preState.page + 1,
+        this.setState((state) => ({
+          images: [...state.images, ...images],
+          page: state.page + 1,
         }));
-        if (!images.hits.length) {
+        if (!images.length) {
           return Promise.reject(new Error(` No image  ${this.state.myImage}`));
         } else {
           this.setState({ error: null });
@@ -60,7 +57,7 @@ class App extends Component {
   render() {
     const { images, loading, error } = this.state;
     return (
-      <>
+      <div className="App">
         <Searchbar onSubmit={this.handleFormSubmit} />
         {error && <h1 style={{ color: "red" }}>{error.message}</h1>}
 
@@ -76,7 +73,7 @@ class App extends Component {
         {!this.state.myImage && <h1>Enter a name for the image search</h1>}
         {images && <ImageGallery images={images} />}
         {images && <Button onClick={this.fetchImages} />}
-      </>
+      </div>
     );
   }
 }
