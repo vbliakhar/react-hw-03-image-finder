@@ -1,20 +1,18 @@
 import React, { Component } from "react";
+// import PropTypes from "prop-types";
 import { createPortal } from "react-dom";
 const modalRoot = document.querySelector("#modal-root");
 
 class Modal extends Component {
   state = {};
   componentDidMount() {
-    console.log("componentDidMount");
     window.addEventListener("keydown", this.handleKeyDown);
   }
   componentWillUnmount() {
-    console.log("componentDidUpdate");
     window.removeEventListener("keydown", this.handleKeyDown);
   }
   handleKeyDown = (e) => {
     if (e.code === "Escape") {
-      console.log("Click escap");
       this.props.onClose();
     }
   };
@@ -32,5 +30,7 @@ class Modal extends Component {
     );
   }
 }
-
+Modal.propTypes = {
+  // onClick: PropTypes.func.isRequired,
+};
 export default Modal;

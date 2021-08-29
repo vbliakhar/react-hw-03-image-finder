@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import PropTypes from "prop-types";
 class Searchbar extends Component {
   state = {
     myImage: "",
@@ -9,7 +9,6 @@ class Searchbar extends Component {
   };
   handlerSubmit = (event) => {
     event.preventDefault();
-    console.log(this.state.myImage + " handlerSubmit Searchbar");
     if (this.state.myImage.trim() === "") {
       return;
     }
@@ -39,5 +38,7 @@ class Searchbar extends Component {
     );
   }
 }
-
+Searchbar.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 export default Searchbar;
