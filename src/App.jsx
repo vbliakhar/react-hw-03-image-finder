@@ -68,58 +68,66 @@ class App extends Component {
   };
   render() {
     const { images, error, status } = this.state;
-    if (status === "idle") {
-      return (
-        <>
-          <Searchbar onSubmit={this.handleFormSubmit} />
-          <h1 style={{ textAlign: "center" }}>
-            Enter a name for the image search
-          </h1>
-        </>
-      );
-    }
-    if (status === "pending") {
-      return (
-        <>
-          <Searchbar onSubmit={this.handleFormSubmit} />
-          <Loader
-            type="Circles"
-            color="red"
-            height={80}
-            width={80}
-            style={{ textAlign: "center" }}
-          />
-        </>
-      );
-    }
-    if (status === "rejected") {
-      return (
-        <>
-          <Searchbar onSubmit={this.handleFormSubmit} />
-          <h1 style={{ color: "red", textAlign: "center" }}>{error.message}</h1>
-        </>
-      );
-    }
-    if (status === "resolved") {
-      this.myScroll();
-      return (
-        <>
-          <Searchbar onSubmit={this.handleFormSubmit} />
-          <ImageGallery images={images} largeImg={this.setLargeImage} />
-          <Button onClick={this.fetchImages} style={{ textAlign: "center" }} />
-        </>
-      );
-    }
-    if (status === "clickModal") {
-      return (
-        <Modal
-          onClose={() => {
-            this.setState({ status: "resolved", largeImg: null });
-          }}
-        >
-          <img src={this.state.largeImg} alt="" />
-        </Modal>
-      );
+    switch (status) {
+      case "idle":
+        return (
+          <>
+            <Searchbar onSubmit={this.handleFormSubmit} />
+            <h1 style={{ textAlign: "center" }}>
+              Enter a name for the image search
+            </h1>
+          </>
+        );
+
+      case "pending":
+        return (
+          <>
+            <Searchbar onSubmit={this.handleFormSubmit} />
+            <Loader
+              type="Circles"
+              color="red"
+              height={80}
+              width={80}
+              style={{ textAlign: "center" }}
+            />
+          </>
+        );
+      case "rejected":
+        return (
+          <>
+            <Searchbar onSubmit={this.handleFormSubmit} />
+            <h1 style={{ color: "red", textAlign: "center" }}>
+              {error.message}
+            </h1>
+          </>
+        );
+
+      case "clickModal":
+        return (
+          <Modal
+            onClose={() => {
+              this.setState({ status: "resolved", largeImg: null });
+            }}
+          >
+            <img src={this.state.largeImg} alt="" />
+          </Modal>
+        );
+
+      case "resolved":
+        this.myScroll();
+        return (
+          <>
+            <Searchbar onSubmit={this.handleFormSubmit} />
+            <ImageGallery images={images} largeImg={this.setLargeImage} />
+            <Button
+              onClick={this.fetchImages}
+              style={{ textAlign: "center" }}
+            />
+          </>
+        );
+
+      default:
+        console.log("Error");
     }
   }
 }
