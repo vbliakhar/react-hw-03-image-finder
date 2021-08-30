@@ -16,6 +16,7 @@ class App extends Component {
     page: 1,
     largeImg: null,
     status: "idle",
+    clickModal: false,
   };
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.myImage;
@@ -47,7 +48,10 @@ class App extends Component {
           this.setState({ error: null });
         }
       })
-      .catch((error) => this.setState({ error, status: "rejected" }));
+      .catch((error) => this.setState({ error, status: "rejected" }))
+      .finally(() => {
+        this.myScroll();
+      });
   };
   handleFormSubmit = (myImage) => {
     if (myImage !== this.state.myImage) {
@@ -58,7 +62,7 @@ class App extends Component {
   };
 
   setLargeImage = (url) => {
-    this.setState({ largeImg: url, status: "clickModal" });
+    this.setState({ largeImg: url });
   };
   myScroll = () => {
     window.scrollTo({
@@ -71,17 +75,17 @@ class App extends Component {
     switch (status) {
       case "idle":
         return (
-          <>
+          <div className="App">
             <Searchbar onSubmit={this.handleFormSubmit} />
             <h1 style={{ textAlign: "center" }}>
               Enter a name for the image search
             </h1>
-          </>
+          </div>
         );
 
       case "pending":
         return (
-          <>
+          <div className="App">
             <Searchbar onSubmit={this.handleFormSubmit} />
             <Loader
               type="Circles"
@@ -90,40 +94,37 @@ class App extends Component {
               width={80}
               style={{ textAlign: "center" }}
             />
-          </>
+          </div>
         );
       case "rejected":
         return (
-          <>
+          <div className="App">
             <Searchbar onSubmit={this.handleFormSubmit} />
             <h1 style={{ color: "red", textAlign: "center" }}>
               {error.message}
             </h1>
-          </>
-        );
-
-      case "clickModal":
-        return (
-          <Modal
-            onClose={() => {
-              this.setState({ status: "resolved", largeImg: null });
-            }}
-          >
-            <img src={this.state.largeImg} alt="" />
-          </Modal>
+          </div>
         );
 
       case "resolved":
-        this.myScroll();
         return (
-          <>
+          <div className="App">
             <Searchbar onSubmit={this.handleFormSubmit} />
             <ImageGallery images={images} largeImg={this.setLargeImage} />
             <Button
               onClick={this.fetchImages}
               style={{ textAlign: "center" }}
             />
-          </>
+            {this.state.largeImg && (
+              <Modal
+                onClose={() => {
+                  this.setState({ largeImg: null });
+                }}
+              >
+                <img src={this.state.largeImg} alt="" />
+              </Modal>
+            )}
+          </div>
         );
 
       default:
